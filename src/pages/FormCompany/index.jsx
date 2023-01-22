@@ -40,7 +40,16 @@ export default function FormCompany(){
           // console.log("DADOS ====> ", data);
           if(data.razao_social != undefined){
             setRazaoSocial(data.razao_social);
-            console.log(data)
+            setNomeFantasia(data.estabelecimento.nome_fantasia);
+            setAtividade(data.estabelecimento.atividade_principal.descricao);
+            setCapitalSocial(data.capital_social);
+
+            let dataRecebida = new Date(data.atualizado_em);
+            let year = dataRecebida.getFullYear();
+            let month = String(dataRecebida.getMonth() + 1).padStart(2,'0');
+            let day = dataRecebida.getDate().toString().padStart(2,'0');
+
+            setUltimaAtl(`${year}-${month}-${day}`);
           }else{
             toast.error('Falha na requisição ao CNPJ!');
           }
