@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { validate } from 'cnpj';
+import { validate, format } from 'cnpj';
 import { toast } from 'react-toastify';
 import { isFloat, isDate, isMobilePhone } from 'validator';
 
@@ -25,6 +25,31 @@ export default function FormCompany(){
     const [ultimaAtlError, setUltimaAtlError] = useState('');
     const [nomePropError, setNomePropError] = useState('');
     const [telefoneError, setTelefoneError] = useState('');
+
+    const handleMouseOut = async(e) => {
+      e.preventDefault();
+
+      setCnpjError('');
+      if(!validate(cnpj)) {
+        setCnpjError("CNPJ inválido!");
+      }else{
+        const cnpjFormatted = cnpj.replace(/[^0-9]/g, '') // expressão regular que só retorna caracteres numéricos entre 0 e 9
+        try {
+          const response = await fetch('https://publica.cnpj.ws/cnpj/'+cnpjFormatted);
+          const data = await response.json();
+          // console.log("DADOS ====> ", data);
+          if(data.razao_social != undefined){
+            setRazaoSocial(data.razao_social);
+            console.log(data)
+          }else{
+            toast.error('Falha na requisição ao CNPJ!');
+          }
+        } catch(err){
+          toast.error('Falha na consulta ao servidor para obter CNPJ!');
+          toast.error(err);
+        }
+      }
+    }
 
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -85,27 +110,27 @@ export default function FormCompany(){
             {razaoSocial}
             <Form onSubmit={handleSubmit}>
                 <label htmlFor='cnpj'>
-                  CNPJ: <input id='cnpj' type="text" placeholder="Insert CNPJ" onChange={(e) => setCnpj(e.target.value)} />
+                  CNPJ: <input id='cnpj' type="text" placeholder="Insert CNPJ" onBlur={handleMouseOut} onChange={(e) => setCnpj(e.target.value)} value={cnpj} />
                   <Error>{cnpjError}</Error>
                 </label>
                 <label htmlFor='razaoSocial'>
-                  Razão Social: <input type="text" id='razaoSocial' placeholder="razão social" onChange={(e) => setRazaoSocial(e.target.value)} />
+                  Razão Social: <input type="text" id='razaoSocial' placeholder="razão social" onChange={(e) => setRazaoSocial(e.target.value)} value={razaoSocial} />
                   <Error>{razaoSocialError}</Error>
                 </label>
                 <label htmlFor="nomeFantasia">
-                  Nome Fantasia: <input type="text" id='nomeFantasia' placeholder="Nome Fantasia" onChange={(e) => setNomeFantasia(e.target.value)} />
+                  Nome Fantasia: <input type="text" id='nomeFantasia' placeholder="Nome Fantasia" onChange={(e) => setNomeFantasia(e.target.value)} value={nomeFantasia} />
                   <Error>{nomeFantasiaError}</Error>
                 </label>
                 <label htmlFor="atividade">
-                  Atividade Principal: <input type="text" id='atividade' placeholder="Atividade Principal" onChange={(e) => setAtividade(e.target.value)} />
+                  Atividade Principal: <input type="text" id='atividade' placeholder="Atividade Principal" onChange={(e) => setAtividade(e.target.value)} value={atividade}/>
                   <Error>{atividadeError}</Error>
                 </label>
                 <label htmlFor="capitalSocial">
-                  Capital Social: <input type="text" id='capitalSocial' placeholder="Capital Social" onChange={(e) => setCapitalSocial(e.target.value)} />
+                  Capital Social: <input type="text" id='capitalSocial' placeholder="Capital Social" onChange={(e) => setCapitalSocial(e.target.value)} value={capitalSocial}/>
                   <Error>{capitalSocialError}</Error>
                 </label>
                 <label htmlFor="ultimaAtl">
-                  Última Atualização: <input type="date" id='ultimaAtl' placeholder="Ultima Atualização" onChange={(e) => setUltimaAtl(e.target.value)} />
+                  Última Atualização: <input type="date" id='ultimaAtl' placeholder="Ultima Atualização" onChange={(e) => setUltimaAtl(e.target.value)} value={ultimaAtl}/>
                   <Error>{ultimaAtlError}</Error>
                 </label>
                 {/* campos não trazidos pela API */}
