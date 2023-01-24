@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { validate, format } from 'cnpj';
 import { toast } from 'react-toastify';
 import { isFloat, isDate, isMobilePhone } from 'validator';
+import { get } from 'lodash';
 
 import { Container } from '../../styles/GlobalStyles';
 import { Form, Title, Error } from './styled';
@@ -26,23 +27,23 @@ export default function FormCompany(){
     const [nomePropError, setNomePropError] = useState('');
     const [telefoneError, setTelefoneError] = useState('');
 
-    const handleMouseOut = async(e) => {
+    const handleBlur = async(e) => {
       e.preventDefault();
 
       setCnpjError('');
-      if(!validate(cnpj)) {
+
+      const cnpjFormatted = cnpj.trim().replace(/[^0-9]/g, ''); // expressão regular que só retorna caracteres numéricos entre 0 e 9
+      if(!validate(cnpjFormatted)) {
         setCnpjError("CNPJ inválido!");
       }else{
-        const cnpjFormatted = cnpj.replace(/[^0-9]/g, '') // expressão regular que só retorna caracteres numéricos entre 0 e 9
         try {
           const response = await fetch('https://publica.cnpj.ws/cnpj/'+cnpjFormatted);
           const data = await response.json();
-          // console.log("DADOS ====> ", data);
           if(data.razao_social != undefined){
-            setRazaoSocial(data.razao_social);
-            setNomeFantasia(data.estabelecimento.nome_fantasia);
-            setAtividade(data.estabelecimento.atividade_principal.descricao);
-            setCapitalSocial(data.capital_social);
+            setRazaoSocial(typeof(data.razao_social) == 'string' ? data.razao_social : '');
+            setNomeFantasia(typeof(data.estabelecimento.nome_fantasia) == 'string' ? data.estabelecimento.nome_fantasia : '');
+            setAtividade(typeof(data.estabelecimento.atividade_principal.descricao) == 'string' ? data.estabelecimento.atividade_principal.descricao : '');
+            setCapitalSocial(typeof(data.capital_social) == 'string' ? data.capital_social : '');
 
             let dataRecebida = new Date(data.atualizado_em);
             let year = dataRecebida.getFullYear();
@@ -74,7 +75,8 @@ export default function FormCompany(){
 
       // validação de entrada
       let formErrors = false;
-      if(!validate(cnpj)) {
+      const cnpjFormatted = cnpj.trim().replace(/[^0-9]/g, '');
+      if(!validate(cnpjFormatted)) {
         setCnpjError("CNPJ inválido!");
         formErrors = true;
       }
@@ -115,11 +117,9 @@ export default function FormCompany(){
     return(
         <Container>
             <Title>Register New Company</Title>
-            <p>{cnpj}</p>
-            {razaoSocial}
             <Form onSubmit={handleSubmit}>
                 <label htmlFor='cnpj'>
-                  CNPJ: <input id='cnpj' type="text" placeholder="Insert CNPJ" onBlur={handleMouseOut} onChange={(e) => setCnpj(e.target.value)} value={cnpj} />
+                  CNPJ: <input id='cnpj' type="text" placeholder="Insert CNPJ" onBlur={handleBlur} onChange={(e) => setCnpj(e.target.value)} value={cnpj} />
                   <Error>{cnpjError}</Error>
                 </label>
                 <label htmlFor='razaoSocial'>
