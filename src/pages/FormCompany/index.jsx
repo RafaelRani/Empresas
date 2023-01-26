@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { validate, format } from 'cnpj';
+import { validate } from 'cnpj';
 import { toast } from 'react-toastify';
 import { isFloat, isDate, isMobilePhone } from 'validator';
-import { get } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { selectCompanies, add } from '../../store/companySlice';
 import { Container } from '../../styles/GlobalStyles';
 import { Form, Title, Error } from './styled';
 
 
 export default function FormCompany(){
+    const dispatch = useDispatch();
+
     const [cnpj, setCnpj] = useState('');
     const [razaoSocial, setRazaoSocial] = useState('');
     const [nomeFantasia, setNomeFantasia] = useState('');
@@ -111,7 +114,17 @@ export default function FormCompany(){
 
       if (formErrors) return;
 
-      toast.success("tudo certo!")
+      console.log('certo até aqui')
+      const empresas = useSelector(selectCompanies);
+      console.log('empresas: ' + empresas);
+
+
+      dispatch(add()); //muda o estado sem enviar dados
+      toast.success("tudo certo!");
+      //var company = {cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone};
+      //console.log(company);
+      //dispatch({ type: 'ADD', company });
+
     }
 
     return(
