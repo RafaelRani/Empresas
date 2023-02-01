@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { isFloat, isDate, isMobilePhone } from 'validator';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectCompanies, add } from '../../store/companySlice';
+import { selectCompanies, add } from '../../features/company/companySlice';
 import { Container } from '../../styles/GlobalStyles';
 import { Form, Title, Error } from './styled';
 
@@ -29,6 +29,8 @@ export default function FormCompany(){
     const [ultimaAtlError, setUltimaAtlError] = useState('');
     const [nomePropError, setNomePropError] = useState('');
     const [telefoneError, setTelefoneError] = useState('');
+
+    const empresas = useSelector(selectCompanies); //precisa ser chamado fora de qualquer função
 
     const handleBlur = async(e) => {
       e.preventDefault();
@@ -114,17 +116,15 @@ export default function FormCompany(){
 
       if (formErrors) return;
 
-      console.log('certo até aqui')
-      const empresas = useSelector(selectCompanies);
-      console.log('empresas: ' + empresas);
-
-
-      dispatch(add()); //muda o estado sem enviar dados
-      toast.success("tudo certo!");
-      //var company = {cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone};
-      //console.log(company);
+      dispatch(add({cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone})) //alterando estado passando valores
+      //alterando estado sem passar valores: dispatch(add())
       //dispatch({ type: 'ADD', company });
+      toast.success("tudo certo!");
+    }
 
+    const handleSelect = (e) => {
+      e.preventDefault();
+      empresas.map(empresa => console.log(empresa.razaoSocial));
     }
 
     return(
@@ -166,6 +166,7 @@ export default function FormCompany(){
                 </label>
                 <button type="submit">Enviar</button>
             </Form>
+            <button type='submit' onClick={handleSelect}>Ler</button>
         </Container>
     );
 }

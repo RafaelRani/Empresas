@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import companiesReducer from './companySlice';
+import companyReducer from '../features/company/companySlice';
 
 export default configureStore({
    reducer: {
-     companies: companiesReducer,
+     company: companyReducer,
    },
 });

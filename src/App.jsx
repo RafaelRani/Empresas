@@ -3,7 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import { Provider } from 'react-redux';
 
-import store from './store';
+import store from './app/store';
 import Home from './pages/Home';
 import NotFound from '../src/pages/NotFound';
 import FormCompany from './pages/FormCompany';
