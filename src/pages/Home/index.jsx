@@ -5,18 +5,16 @@ import { selectCompanies } from '../../features/company/companySlice';
 export default function Home(){
   const companies = useSelector(selectCompanies);
 
-  const handleClick = (e) => {
-    e.preventDefault();
-    companies.map(empresa => console.log(empresa.razaoSocial));
-  }
-
   return (
     <div className="Home">
       <h1>Home</h1>
-      <p>Aqui será exibida a lista de empresas cadastradas</p>
       <ul id='companies'>
+        {
+          companies.map(company => (
+            <li key={company.cnpj}>{company.razaoSocial} - {company.dataAtual}</li>
+          ))
+        }
       </ul>
-      <button type="submit" onClick={handleClick}>Ver Empresas</button>
     </div>
   );
 };

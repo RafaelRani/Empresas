@@ -8,12 +8,14 @@ import Home from './pages/Home';
 import NotFound from '../src/pages/NotFound';
 import FormCompany from './pages/FormCompany';
 import GlobalStyle from './styles/GlobalStyles';
+import { Menu } from './components/Menu';
 
 function App() {
 
   return (
     <Provider store={store}>
       <BrowserRouter>
+        <Menu />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/company" element={<FormCompany />} />
