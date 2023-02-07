@@ -8,11 +8,17 @@ export const companySlice = createSlice({
   reducers: {
     add: (state, action) => {
       state.companies.push(action.payload);
+    },
+    deleteItem: (state, action) => {
+      state.companies.splice(action.payload, 1);
+    },
+    updateItem: (state, action) => {
+      state.companies[action.payload.id] = {...action.payload.empresa};
     }
   }
 })
 
-export const { add } = companySlice.actions;
+export const { add, deleteItem, updateItem } = companySlice.actions;
 
 export const selectCompanies = (state) => state.company.companies;
 

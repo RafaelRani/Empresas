@@ -3,8 +3,9 @@ import { validate } from 'cnpj';
 import { toast } from 'react-toastify';
 import { isFloat, isDate, isMobilePhone } from 'validator';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 
-import { selectCompanies, add } from '../../features/company/companySlice';
+import { selectCompanies, add, updateItem } from '../../features/company/companySlice';
 import { Container } from '../../styles/GlobalStyles';
 import { Form, Title, Error } from './styled';
 
@@ -30,7 +31,22 @@ export default function FormCompany(){
   const [nomePropError, setNomePropError] = useState('');
   const [telefoneError, setTelefoneError] = useState('');
 
-  const empresas = useSelector(selectCompanies); //precisa ser chamado fora de qualquer função
+  const { state } = useLocation();
+  const id = state;
+  const companies = useSelector(selectCompanies); //precisa ser chamado fora de qualquer função
+
+  useEffect(() => {
+    if (!id) return;
+
+    setCnpj(companies[id].cnpjFormatted);
+    setRazaoSocial(companies[id].razaoSocial);
+    setNomeFantasia(companies[id].nomeFantasia);
+    setAtividade(companies[id].atividade);
+    setCapitalSocial(companies[id].capitalSocial);
+    setUltimaAtl(companies[id].ultimaAtl);
+    setNomeProp(companies[id].nomeProp);
+    setTelefone(companies[id].telefone);
+  },[]);
 
   const clearErrorField = () => {
     setCnpjError('');
@@ -123,12 +139,17 @@ export default function FormCompany(){
     var dataAtual = new Date().toLocaleDateString("pt-br", {
       hour: '2-digit',
       minute: '2-digit'
-    })
+    });
 
-    dispatch(add({cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone, dataAtual})) //alterando estado passando valores
-    //alterando estado sem passar valores: dispatch(add())
-    //dispatch({ type: 'ADD', company });
-    toast.success("Adicionado com sucesso");
+    if(!id){
+      dispatch(add({cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone, dataAtual})) //alterando estado passando valores
+      //alterando estado sem passar valores: dispatch(add())
+      //dispatch({ type: 'ADD', company });
+      toast.success("Empresa adicionada com sucesso!");
+    }else{
+      dispatch(updateItem({id, empresa: {cnpjFormatted, razaoSocial, nomeFantasia, atividade, capitalSocial, ultimaAtl, nomeProp, telefone, dataAtual}}))
+      toast.success('Empresa atualizada com sucesso!')
+    }
 
     setCnpj('');
     setRazaoSocial('');
@@ -142,7 +163,7 @@ export default function FormCompany(){
 
   return(
     <Container>
-      <Title>Register New Company</Title>
+      <Title>{id ? 'Edit Company' : 'Register New Company'}</Title>
       <Form onSubmit={handleSubmit}>
           <label htmlFor='cnpj'>
             CNPJ: <input id='cnpj' type="text" placeholder="Insert CNPJ" onBlur={handleBlur} onChange={(e) => setCnpj(e.target.value)} value={cnpj} />
@@ -177,7 +198,7 @@ export default function FormCompany(){
             Telefone: <input type="tel" id='telefone' placeholder="(DDD) XXXXX-XXXX" onChange={(e) => setTelefone(e.target.value)} value={telefone} />
             <Error>{telefoneError}</Error>
           </label>
-          <button type="submit">Enviar</button>
+          <button type="submit">Salvar</button>
       </Form>
     </Container>
   );
