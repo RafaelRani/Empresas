@@ -1,8 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+//import { useState } from 'react';
+//import Modal from 'react-bootstrap/Modal';
+
+import Container from 'react-bootstrap/Container';
+import Badge from 'react-bootstrap/Badge';
 
 import { selectCompanies, deleteItem } from '../../features/company/companySlice';
 import ListCompanies from '../../components/ListCompanies';
+import { Title } from './styled';
 
 export default function Home(){
   const companies = useSelector(selectCompanies);
@@ -19,11 +25,17 @@ export default function Home(){
 
   return (
     <div className="Home">
-      <h1>Home</h1>
-      <ListCompanies
-        companies={companies}
-        handleDelete={handleDelete}
-      />
+      <Container>
+        <Title>EMPRESAS CADASTRADAS &ensp; <h5><Badge bg="success">{companies.length}</Badge></h5></Title>
+        {companies.length > 0 ?
+        <ListCompanies
+          companies={companies}
+          handleDelete={handleDelete}
+        />
+        :
+        <small>Nenhuma empresa cadastrada</small>
+        }
+      </Container >
     </div>
   );
 };
