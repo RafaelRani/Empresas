@@ -3,6 +3,7 @@ import { FaEdit, FaWindowClose } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { get } from 'lodash';
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
@@ -17,8 +18,12 @@ export default function ListCompanies({ companies, handleDelete }) {
   const [show, setShow] = useState(false);
   const [indexCanva, setIndexCanva] = useState(0);
 
-  const handleClose = () => setShow(false);
+  const handleClose = () => {
+     setShow(false);
+     setIndexCanva(0);
+  };
   const handleShow = (event, index) => {
+    event.preventDefault();
     setIndexCanva(index);
     setShow(true);
   }
@@ -71,6 +76,7 @@ export default function ListCompanies({ companies, handleDelete }) {
         ))}
       </ListGroup>
 
+      {companies.length ?
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>{companies[indexCanva].razaoSocial}</Offcanvas.Title>
@@ -81,6 +87,7 @@ export default function ListCompanies({ companies, handleDelete }) {
           <strong>CNPJ Atualizado em: </strong><p>{companies[indexCanva].ultimaAtl}</p>
         </Offcanvas.Body>
       </Offcanvas>
+      : ''}
   </>
   );
 }
