@@ -1,3 +1,2 @@
-1. Modal de confirmação para deletar empresa
 2. páginação para carregar só 5 empresas no máximo por página
 3. Incluir o react redux persist para persistir os dados ao recarregar a página
