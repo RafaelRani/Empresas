@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
 
+import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import Badge from 'react-bootstrap/Badge';
 import Button from 'react-bootstrap/Button';

@@ -1,9 +1,8 @@
 //import React from 'react';
-import { FaEdit, FaWindowClose } from 'react-icons/fa';
+import { FaEdit, FaWindowClose, FaArrowCircleUp} from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-import { get } from 'lodash';
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
@@ -62,6 +61,13 @@ export default function ListCompanies({ companies, handleDelete }) {
                       </Link>
                       <Link to="#">
                         <FaWindowClose
+                          onClick={(event) => handleDelete(event, index)}
+                          className="delete"
+                          size={24}
+                        />
+                      </Link>
+                      <Link to="#">
+                        <FaArrowCircleUp
                           onClick={(event) => handleDelete(event, index)}
                           className="delete"
                           size={24}
