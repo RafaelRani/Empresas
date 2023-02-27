@@ -2,14 +2,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
-import Modal from 'react-bootstrap/Modal';
 import Container from 'react-bootstrap/Container';
 import Badge from 'react-bootstrap/Badge';
-import Button from 'react-bootstrap/Button';
 
 import { selectCompanies, deleteItem } from '../../features/company/companySlice';
 import ListCompanies from '../../components/ListCompanies';
 import { Title } from './styled';
+import ModalBootstrap from '../../components/ModalBootstrap';
 
 export default function Home(){
   const [show, setShow] = useState(false);
@@ -39,30 +38,24 @@ export default function Home(){
     <div className="Home">
       <Container>
         <Title>EMPRESAS CADASTRADAS &ensp; <h5><Badge bg="success">{companies.length}</Badge></h5></Title>
-        {companies.length ?
-        <ListCompanies
-          companies={companies}
-          handleDelete={handleShow}
-        />
+        { companies.length ?
+          <>
+          <ListCompanies
+            companies={companies}
+            handleDelete={handleShow}
+          />
+          <ModalBootstrap
+            show={show}
+            handleClose={handleClose}
+            handleDelete={handleDelete}
+            company={companies[indexDelete]}
+            indexDelete={indexDelete}
+          />
+          </>
         :
-        <small>Nenhuma empresa cadastrada</small>
+          <small>Nenhuma empresa cadastrada</small>
         }
       </Container >
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Deseja Deletar?</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>{companies.length > 0 ? companies[indexDelete].razaoSocial : ''}</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="success" onClick={(event) => handleDelete(event, indexDelete)}>
-            Deletar
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 };
