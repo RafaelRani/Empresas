@@ -39,7 +39,7 @@ export default function Home(){
     <div className="Home">
       <Container>
         <Title>EMPRESAS CADASTRADAS &ensp; <h5><Badge bg="success">{companies.length}</Badge></h5></Title>
-        {companies.length > 0 ?
+        {companies.length ?
         <ListCompanies
           companies={companies}
           handleDelete={handleShow}

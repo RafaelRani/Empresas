@@ -1,14 +1,14 @@
 //import React from 'react';
-import { FaEdit, FaWindowClose, FaArrowCircleUp} from 'react-icons/fa';
+import { FaEdit, FaWindowClose } from 'react-icons/fa';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import OffCanvas from '../OffCanvas';
 
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 
 import './styled.css';
@@ -17,15 +17,15 @@ export default function ListCompanies({ companies, handleDelete }) {
   const [show, setShow] = useState(false);
   const [indexCanva, setIndexCanva] = useState(0);
 
-  const handleClose = () => {
-     setShow(false);
-     setIndexCanva(0);
-  };
   const handleShow = (event, index) => {
     event.preventDefault();
     setIndexCanva(index);
     setShow(true);
   }
+  const handleClose = () => {
+    setShow(false);
+    setIndexCanva(0);
+  };
 
   return (
     <>
@@ -49,7 +49,7 @@ export default function ListCompanies({ companies, handleDelete }) {
               <Card.Footer>
                 <Row>
                   <Col>
-                    <Button variant="outline-success" onClick={(event) => handleShow(event, index)} href="#">Ver Mais</Button>
+                    <Button variant="outline-success" onClick={(event) => handleShow(event, index)}>Ver Mais</Button>
                   </Col>
                   <Col>
                     <span>
@@ -66,13 +66,6 @@ export default function ListCompanies({ companies, handleDelete }) {
                           size={24}
                         />
                       </Link>
-                      <Link to="#">
-                        <FaArrowCircleUp
-                          onClick={(event) => handleDelete(event, index)}
-                          className="delete"
-                          size={24}
-                        />
-                      </Link>
                     </span>
                   </Col>
                 </Row>
@@ -81,18 +74,12 @@ export default function ListCompanies({ companies, handleDelete }) {
           </ListGroup.Item>
         ))}
       </ListGroup>
-
       {companies.length ?
-      <Offcanvas show={show} onHide={handleClose}>
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>{companies[indexCanva].razaoSocial}</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <strong>Atividade principal:</strong><p>{companies[indexCanva].atividade}</p>
-          <strong>Proprietário:</strong><p>{companies[indexCanva].nomeProp}</p><p>Contato: {companies[indexCanva].telefone}</p>
-          <strong>CNPJ Atualizado em: </strong><p>{companies[indexCanva].ultimaAtl}</p>
-        </Offcanvas.Body>
-      </Offcanvas>
+        <OffCanvas
+          company={companies[indexCanva]}
+          show={show}
+          handleClose={handleClose}
+        />
       : ''}
   </>
   );
